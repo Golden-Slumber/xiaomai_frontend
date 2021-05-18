@@ -1,29 +1,34 @@
 <template>
   <div class="login_page fillcontain">
-    <div class="form_contianer">
-      <div class="manage_tip">
-        <p>小麦网</p>
-      </div>
-      <el-form :model="form" :rules="rules" ref="form">
-        <el-form-item label="手机号码" prop="phone_number">
-          <el-input v-model="form.phone_number"></el-input>
-        </el-form-item>
-        <el-form-item label="密码" prop="password">
-          <el-input type="password" v-model="form.password"></el-input>
-        </el-form-item>
-        <el-form-item>
-          <el-button type="primary" @click="onSubmit('form')" class="submit_btn">登录</el-button>
-        </el-form-item>
-      </el-form>
-    </div>
+    <transition name="el-fade-in">
+      <el-card class="form_contianer" border v-show="showLogin">
+        <span class="manage_tip">小麦网</span>
+        <el-form :model="form" :rules="rules" ref="form">
+          <el-form-item label="手机号码" prop="phone_number">
+            <el-input v-model="form.phone_number"></el-input>
+          </el-form-item>
+          <el-form-item label="密码" prop="password">
+            <el-input type="password" v-model="form.password"></el-input>
+          </el-form-item>
+          <el-form-item>
+            <el-button type="primary" @click="onSubmit('form')" class="submit_btn">登录</el-button>
+          </el-form-item>
+          <el-form-item>
+            <label @click="switchRegister" class="xm-word">没有账号？去注册</label>
+          </el-form-item>
+        </el-form>
+      </el-card>
+    </transition>
   </div>
 </template>
 
 <script>
+import {mapActions} from 'vuex'
+
 export default {
   name: 'login',
   data () {
-    var validatePhone = (rule, value, callback) => {
+    const validatePhone = (rule, value, callback) => {
       if (value === '') {
         callback(new Error('请输入手机号'))
       } else {
@@ -33,7 +38,7 @@ export default {
         callback()
       }
     }
-    var validatePass = (rule, value, callback) => {
+    const validatePass = (rule, value, callback) => {
       if (value === '') {
         callback(new Error('请输入密码'))
       } else {
@@ -57,7 +62,8 @@ export default {
         password: [
           {validator: validatePass, trigger: 'blur'}
         ]
-      }
+      },
+      showLogin: false
     }
   },
   mounted () {
@@ -67,6 +73,9 @@ export default {
     onSubmit (formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
+          this.$store.dispatch('login')
+          this.$store.dispatch('setPhoneNumber', this.phone_number)
+          this.$router.push('/')
           alert('submit!')
         } else {
           console.log('error!')
@@ -74,7 +83,15 @@ export default {
         }
       })
       console.log('submit!')
-    }
+    },
+    switchRegister () {
+      this.$router.push('/register')
+    },
+    ...mapActions([
+      'setUsername',
+      'setPhoneNumber',
+      'login'
+    ])
   }
 }
 </script>
@@ -83,29 +100,31 @@ export default {
 @import '../style/mixin';
 
 .login_page {
-  background-color: #E0E0E0;
+  //background-color: #E0E0E0;
+}
+
+.xm-word:hover{
+  color: #409EFF;
 }
 
 .manage_tip {
-  position: absolute;
-  width: 100%;
-  top: -100px;
-  left: 0;
-
-  p {
-    font-size: 34px;
-    color: #409EFF;
-  }
+  //position: absolute;
+  //width: 100%;
+  //top: -100px;
+  //left: 0;
+  font-size: 34px;
+  color: #409EFF;
 }
 
 .form_contianer {
   //.wh(320px, 210px);
   //.ctp(320px, 210px);
   width: 420px;
-  height: 310px;
+  height: 410px;
   .center();
   padding: 25px;
-  border-radius: 5px;
+  border-width: thin;
+  border-color: black;
   text-align: center;
   background-color: #fff;
 
