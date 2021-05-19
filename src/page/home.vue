@@ -3,9 +3,14 @@
     <topMenu active-index="1"></topMenu>
     <el-row type="flex" justify="center" class="xm-common">
       <el-col :span="18" :xl="10">
-        <el-carousel :interval="5000" :height="bannerHeight+'px'" arrow="always">
+<!--        <el-carousel :interval="5000" :height="bannerHeight+'px'" arrow="always">-->
+<!--          <el-carousel-item v-for="item in pictures" :key="item.url">-->
+<!--            <img ref="bannerHeight" @load="imgload" :src="item.url" class="xm-img"/>-->
+<!--          </el-carousel-item>-->
+<!--        </el-carousel>-->
+        <el-carousel :interval="5000" :height="bannerHeight + 'px'" arrow="always">
           <el-carousel-item v-for="item in pictures" :key="item.url">
-            <img ref="bannerHeight" @load="imgload" :src="item.url" class="xm-img"/>
+            <img ref="bannerHeight" :src="item.url" class="xm-img" />
           </el-carousel-item>
         </el-carousel>
       </el-col>
@@ -144,6 +149,7 @@ export default {
     }
     return {
       bannerHeight: '',
+      screenWidth: '',
       pictures: [
         {url: 'https://gw.alicdn.com/imgextra/i1/O1CN01mK1P6B1JLzswMc8Ut_!!6000000001013-0-tps-1200-320.jpg'},
         {url: 'https://gw.alicdn.com/imgextra/i1/O1CN01jTl8cr1hrBdypchqy_!!6000000004330-0-tps-1200-320.jpg'},
@@ -159,20 +165,32 @@ export default {
     }
   },
   methods: {
-    imgload () {
-      this.$nextTick(() => {
-        this.bannerHeight = this.$refs.bannerHeight[0].height
-        console.log(this.$refs.bannerHeight[0].height)
-      })
+    // imgload () {
+    //   this.$nextTick(() => {
+    //     this.bannerHeight = this.$refs.bannerHeight[0].height
+    //     console.log(this.$refs.bannerHeight[0].height)
+    //   })
+    // }
+    setSize: function () {
+      // 通过浏览器宽度(图片宽度)计算高度
+      this.bannerHeight = 400 / 1920 * this.screenWidth
     }
   },
   mounted () {
+    // window.onresize = () => {
+    //   this.imgload()
+    //   window.addEventListener('resize', () => {
+    //     this.bannerHeight = this.$refs.bannerHeight[0].height
+    //     this.imgload()
+    //   }, false)
+    // }
+    // 首次加载时,需要调用一次
+    this.screenWidth = window.innerWidth
+    this.setSize()
+    // 窗口大小发生改变时,调用一次
     window.onresize = () => {
-      this.imgload()
-      window.addEventListener('resize', () => {
-        this.bannerHeight = this.$refs.bannerHeight[0].height
-        this.imgload()
-      }, false)
+      this.screenWidth = window.innerWidth
+      this.setSize()
     }
   }
 }
@@ -244,5 +262,11 @@ export default {
 
 .el-carousel__item:nth-child(2n+1) {
   background-color: #d3dce6;
+}
+
+img{
+  /*设置图片宽度和浏览器宽度一致*/
+  width: 100%;
+  height: inherit;
 }
 </style>

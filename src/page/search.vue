@@ -65,6 +65,11 @@
             </el-col>
           </el-row>
         </el-card>
+        <el-row type="flex" justify="center" class="xm-bot">
+          <el-col :span="2">
+            <label class="xm-more">查看更多</label>
+          </el-col>
+        </el-row>
       </el-col>
       <el-col :span="6">
         <el-card class="xm-header">
@@ -127,7 +132,7 @@ export default {
         value: '选项5',
         label: '北京烤鸭'
       }],
-      tableData: Array(20).fill(item),
+      tableData: Array(10).fill(item),
       likeData: Array(4).fill(like),
       value: ''
     }
@@ -148,7 +153,7 @@ export default {
 }
 
 .xm-header {
-  background-color: #E0E0E0;
+  background-color: #F2F2F2;
 }
 
 .xm-row {
@@ -187,6 +192,20 @@ export default {
 .xm-price{
   font-size: large;
   color: #409EFF;
+}
+
+.xm-more:hover {
+  color: #409EFF;
+}
+
+.xm-more{
+  font-size: medium;
+  color: gray;
+}
+
+.xm-bot{
+  margin-top: 30px;
+  margin-bottom: 30px;
 }
 
 .xm-divider{
