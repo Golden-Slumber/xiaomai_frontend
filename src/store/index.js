@@ -17,6 +17,10 @@ const mutations = {
   },
   logout (state) {
     state.isLogin = false
+    state.token = ''
+    state.phoneNumber = ''
+    state.username = ''
+    state.currentShow = ''
   },
   setToken (state, payload) {
     state.token = payload

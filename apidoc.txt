@@ -1,0 +1,122 @@
+show-service: 需要token
+http://123.60.219.102:10010/damai/show-service/show/getAllInPage/
+http://123.60.219.102:10010/damai/show-service/show/getAllByCityInPage/          3个get
+http://123.60.219.102:10010/damai/show-service/show/getAllByTypeInPage/
+参数
+{
+    "page":2,
+    "pageSize":2,
+    "city":"sh",
+    "type":"aaa"
+}
+返回
+{
+    "data": {
+        "showList": [
+            {
+                "id": 1,
+                "name": "bjbi",
+                "typeName": "aaa",
+                "city": "sh",
+                "venue": "bjh b",
+                "image": "a ilbjb"
+            },
+            {
+                "id": 2,
+                "name": " jlhbhb",
+                "typeName": "aaa",
+                "city": "sh",
+                "venue": " hjb",
+                "image": " sld"
+            },
+            {
+                "id": 3,
+                "name": "beb",
+                "typeName": "aaa",
+                "city": "sh",
+                "venue": "beq",
+                "image": ""
+            },
+            {
+                "id": 4,
+                "name": "eqbet",
+                "typeName": "bbb",
+                "city": "bj",
+                "venue": "teb",
+                "image": ""
+            },
+            {
+                "id": 5,
+                "name": "bt",
+                "typeName": "bbb",
+                "city": "bj",
+                "venue": "bteb",
+                "image": ""
+            },
+            {
+                "id": 6,
+                "name": "【武汉】2021武汉MDSK音乐节",
+                "typeName": "演唱会",
+                "city": "武汉",
+                "venue": "武汉市 | 武汉市园博园 ",
+                "image": "https://img.alicdn.com/bao/uploaded/https://img.alicdn.com/imgextra/i4/2251059038/O1CN01jzHnjS2GdSJrdgQau_!!2251059038.jpg_q60.jpg_.webp"
+            }
+        ]
+    },
+    "code": 0,
+    "msg": "请求成功!"
+}
+
+
+user-service: 不需要token
+http://123.60.219.102:10010/damai/user-service/user/register/         get
+http://123.60.219.102:10010/damai/user-service/user/login/              post
+
+public class RegisterRequest {
+    private String username;
+    private String password;
+    private String phone_number;
+}
+public class LoginRequest {
+    private String phone;
+    private String password;
+}
+
+
+{
+    "data": {
+        "token": "9d971b20-61d6-49fa-bfdf-5359a9e5bccb"
+    },
+    "code": 0,
+    "msg": "请求成功!"
+}
+
+order-service：需要token
+http://123.60.219.102:10010/damai/order-service/order/place/        post
+{
+    "showID":6,
+    "sessionID":2,
+    "ticketID":3,
+    "userID":28,
+    "amount":1
+}
+{
+    "code": 0,
+    "message": null,
+    "data": null
+}
+
+http://123.60.219.102:10010/damai/show-service/show/getDetail/
+传个show的id就行
+
+order-service：需要token
+http://123.60.219.102:10010/damai/order-service/order/orders        GET
+{
+    "pageNo":0,(注意，页码从零开始)
+    "pageSize":5
+}
+{
+    "code": 0,
+    "message": null,
+    "data": [...]
+}

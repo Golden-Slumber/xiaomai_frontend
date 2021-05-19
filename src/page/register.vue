@@ -26,12 +26,15 @@
 </template>
 
 <script>
+// import qs from 'qs'
 export default {
   name: 'register',
   data () {
     const validatePhone = (rule, value, callback) => {
       if (value === '') {
         callback(new Error('请输入手机号'))
+      } else if (!(/^1[34578]\d{9}$/.test(this.form.phone_number))) {
+        callback(new Error('手机号格式不正确'))
       } else {
         if (this.form.phone_number !== '') {
           this.$refs.form.validateField('username')
@@ -99,14 +102,50 @@ export default {
     onSubmit (formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          this.$router.push('/login')
-          alert('submit!')
+          console.log('show data')
+          console.log({
+            username: this.form.username,
+            password: this.form.password,
+            phone_number: this.form.phone_number
+          })
+          this.$axios({
+            method: 'post',
+            url: 'http://123.60.219.102:10010/damai/user-service/user/register/',
+            data: {
+              username: this.form.username,
+              password: this.form.password,
+              phone_number: this.form.phone_number
+            },
+            headers: {
+              'Content-Type': 'application/json'
+            }
+          }).then((response) => {
+            console.log(response)
+            this.$router.push('/login')
+            this.$notify({
+              title: '成功',
+              message: this.form.username + '，欢迎加入小麦网！',
+              type: 'success',
+              duration: 3000
+            })
+          }).catch((error) => {
+            console.log(error)
+            this.$notify.error({
+              title: '错误',
+              message: '注册失败',
+              duration: 3000
+            })
+          })
         } else {
           console.log('error!')
+          this.$notify.error({
+            title: '错误',
+            message: '注册失败',
+            duration: 3000
+          })
           return false
         }
       })
-      console.log('submit!')
     }
   }
 }

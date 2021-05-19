@@ -73,12 +73,52 @@ export default {
     onSubmit (formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          this.$store.dispatch('login')
-          this.$store.dispatch('setPhoneNumber', this.phone_number)
-          this.$router.push('/')
-          alert('submit!')
+          this.$axios({
+            method: 'post',
+            url: 'http://123.60.219.102:10010/damai/user-service/user/login/',
+            data: {
+              phone: this.form.phone_number,
+              password: this.form.password
+            }
+          }).then(({data}) => {
+            console.log('respose', data)
+            const response = data
+            if (response.code === 1) {
+              this.$notify.error({
+                title: '失败',
+                message: '登录失败',
+                duration: 3000
+              })
+            } else {
+              console.log('token1')
+              console.log(response.data.token)
+              window.localStorage.setItem('token', response.data.token)
+              this.$store.dispatch('setToken', response.data.token)
+              this.$store.dispatch('login')
+              this.$store.dispatch('setPhoneNumber', this.form.phone_number)
+              this.$router.push('/')
+              this.$notify({
+                title: '成功',
+                message: '欢迎您，' + this.form.phone_number,
+                type: 'success',
+                duration: 3000
+              })
+            }
+          }).catch((error) => {
+            console.log(error)
+            this.$notify.error({
+              title: '失败',
+              message: '登录失败',
+              duration: 3000
+            })
+          })
         } else {
           console.log('error!')
+          this.$notify.error({
+            title: '失败',
+            message: '登录失败',
+            duration: 3000
+          })
           return false
         }
       })
@@ -103,7 +143,7 @@ export default {
   //background-color: #E0E0E0;
 }
 
-.xm-word:hover{
+.xm-word:hover {
   color: #409EFF;
 }
 

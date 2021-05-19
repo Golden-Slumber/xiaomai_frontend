@@ -37,9 +37,13 @@
             <!--&lt;!&ndash;            <span class="xm-price">{{item.price}}}</span>&ndash;&gt;-->
             <!--&lt;!&ndash;          </el-col>&ndash;&gt;-->
             <!--        </div>-->
-            <el-col  v-for="item in showdata1" :span="5" :key="item.url" class="xm-col">
+            <el-col  v-for="item in showdata1" :span="5" :key="item.id" class="xm-col">
               <el-row>
-                <el-image :src="item.url" fit="fill"></el-image>
+                <el-image :src="item.image" fit="fill">
+                  <div slot="error" class="image-slot">
+                    <i class="el-icon-picture-outline"></i>
+                  </div>
+                </el-image>
               </el-row>
               <el-row >
                 <label class="demonstration">{{item.name}}</label>
@@ -177,13 +181,57 @@ export default {
     }
   },
   mounted () {
-    // window.onresize = () => {
-    //   this.imgload()
-    //   window.addEventListener('resize', () => {
-    //     this.bannerHeight = this.$refs.bannerHeight[0].height
-    //     this.imgload()
-    //   }, false)
-    // }
+    console.log('show token')
+    console.log(this.$store.state.token)
+    // 演唱会
+    this.$axios({
+      method: 'post',
+      url: 'http://123.60.219.102:10010/damai/show-service/show/getAllByTypeInPage/',
+      data: {
+        page: 1,
+        pageSize: 4,
+        type: '演唱会'
+      },
+      headers: {
+        'token': 'Bearer Token ' + window.localStorage.getItem('token')
+      }
+    }).then(({data}) => {
+      this.showdata1 = data.data.showList
+    }).catch((error) => {
+      console.log(error)
+    })
+    // // 话剧歌剧
+    // this.$axios({
+    //   method: 'post',
+    //   url: 'http://123.60.219.102:10010/damai/show-service/show/getAllByTypeInPage/',
+    //   data: {
+    //     page: 1,
+    //     pageSize: 3,
+    //     type: '话剧歌剧'
+    //   }
+    // }).then((reponse) => {
+    //   if (reponse.code === 0) {
+    //     this.showdata2 = reponse.data.showList
+    //   }
+    // }).catch((error) => {
+    //   console.log(error)
+    // })
+    // // 体育比赛
+    // this.$axios({
+    //   method: 'post',
+    //   url: 'http://123.60.219.102:10010/damai/show-service/show/getAllByTypeInPage/',
+    //   data: {
+    //     page: 1,
+    //     pageSize: 3,
+    //     type: '体育比赛'
+    //   }
+    // }).then((reponse) => {
+    //   if (reponse.code === 0) {
+    //     this.showdata3 = reponse.data.showList
+    //   }
+    // }).catch((error) => {
+    //   console.log(error)
+    // })
     // 首次加载时,需要调用一次
     this.screenWidth = window.innerWidth
     this.setSize()
