@@ -39,20 +39,30 @@
                 style="width: 100%">
                 <el-table-column
                   label="项目信息"
-                  width="180">
-                  {{data.date}}
+                  width="300">
+                  <template slot-scope="scope">
+                    <el-row type="flex" justify="center" align="middle" :gutter="10">
+                      <el-col :span="12">
+                        <el-image :src="scope.row.url"></el-image>
+                      </el-col>
+                      <el-col :span="12">
+                        <el-row><label class="demostration">{{scope.row.name}}</label></el-row>
+                        <el-row><label class="demostration">{{scope.row.city}}</label></el-row>
+                      </el-col>
+                    </el-row>
+                  </template>
                 </el-table-column>
                 <el-table-column
-                  prop="name"
+                  prop="price"
                   label="单价"
                   width="180">
                 </el-table-column>
                 <el-table-column
-                  prop="address"
+                  prop="amount"
                   label="数量">
                 </el-table-column>
                 <el-table-column
-                  prop="price"
+                  prop="total"
                   label="小计">
                 </el-table-column>
               </el-table>
@@ -83,10 +93,12 @@ export default {
   data () {
     return {
       tableData: [{
-        date: '2016-05-02',
-        name: '王小虎',
-        address: '上海市普陀区金沙江路 1518 弄',
-        price: '90'
+        url: 'https://img.alicdn.com/bao/uploaded/https://img.alicdn.com/imgextra/i3/2251059038/O1CN01sx7cQ42GdSJRkEjJd_!!2251059038.png_q60.jpg_.webp',
+        name: '开心麻花爆笑舞台剧《瞎画艺术家》',
+        city: '上海市 | FANCL艺术中心 艺海剧院大剧场',
+        price: '90',
+        amount: '1',
+        total: '90'
       }],
       checked: true
     }
@@ -116,6 +128,10 @@ export default {
 
 .el-icon-truck{
   color: #409EFF;
+}
+
+.demostration{
+  font-size: 1px;
 }
 
 .xm-button{
