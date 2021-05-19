@@ -10,64 +10,106 @@
         </el-carousel>
       </el-col>
     </el-row>
-    <el-divider></el-divider>
     <el-row type="flex" justify="center" class="xm-common">
-      <el-col offset="2">
-        <h2>演唱会</h2>
+      <el-col :span="20">
+        <el-divider></el-divider>
       </el-col>
     </el-row>
-    <el-row type="flex" :gutter="50" justify="center" class="xm-common">
-      <!--        <div  >-->
-      <!--         -->
-      <!--&lt;!&ndash;          <el-col :span="1" :xl="1" class="xm-col">&ndash;&gt;-->
-      <!--&lt;!&ndash;            <span>{{item.name}}}</span>&ndash;&gt;-->
-      <!--&lt;!&ndash;            <span>{{item.city}}</span>&ndash;&gt;-->
-      <!--&lt;!&ndash;            <span class="xm-price">{{item.price}}}</span>&ndash;&gt;-->
-      <!--&lt;!&ndash;          </el-col>&ndash;&gt;-->
-      <!--        </div>-->
-      <el-col  v-for="item in showdata1" :span="5" :key="item.url" class="xm-col">
-        <label class="demonstration">{{item.name}}</label>
-        <el-image :src="item.url" fit="fill"></el-image>
+    <el-row type="flex" justify="center">
+      <el-col :span="20">
+        <el-card shadow="hover">
+          <el-row type="flex" justify="center" class="xm-row"  border>
+            <el-col offset="2">
+              <h2>演唱会</h2>
+            </el-col>
+          </el-row>
+          <el-row type="flex" :gutter="50" justify="center" class="xm-common">
+            <!--        <div  >-->
+            <!--         -->
+            <!--&lt;!&ndash;          <el-col :span="1" :xl="1" class="xm-col">&ndash;&gt;-->
+            <!--&lt;!&ndash;            <span>{{item.name}}}</span>&ndash;&gt;-->
+            <!--&lt;!&ndash;            <span>{{item.city}}</span>&ndash;&gt;-->
+            <!--&lt;!&ndash;            <span class="xm-price">{{item.price}}}</span>&ndash;&gt;-->
+            <!--&lt;!&ndash;          </el-col>&ndash;&gt;-->
+            <!--        </div>-->
+            <el-col  v-for="item in showdata1" :span="5" :key="item.url" class="xm-col">
+              <el-row>
+                <el-image :src="item.url" fit="fill"></el-image>
+              </el-row>
+              <el-row >
+                <label class="demonstration">{{item.name}}</label>
+              </el-row>
+            </el-col>
+          </el-row>
+        </el-card>
       </el-col>
     </el-row>
-    <el-divider></el-divider>
     <el-row type="flex" justify="center" class="xm-common">
-      <el-col offset="2">
-        <h2>话剧歌剧</h2>
+      <el-col :span="20">
+        <el-divider></el-divider>
       </el-col>
     </el-row>
-    <el-row type="flex" :gutter="50" justify="center" class="xm-common">
-      <!--        <div  >-->
-      <!--         -->
-      <!--&lt;!&ndash;          <el-col :span="1" :xl="1" class="xm-col">&ndash;&gt;-->
-      <!--&lt;!&ndash;            <span>{{item.name}}}</span>&ndash;&gt;-->
-      <!--&lt;!&ndash;            <span>{{item.city}}</span>&ndash;&gt;-->
-      <!--&lt;!&ndash;            <span class="xm-price">{{item.price}}}</span>&ndash;&gt;-->
-      <!--&lt;!&ndash;          </el-col>&ndash;&gt;-->
-      <!--        </div>-->
-      <el-col  v-for="item in showdata2" :span="5" :key="item.url" class="xm-col">
-        <label class="demonstration">{{item.name}}</label>
-        <el-image :src="item.url" fit="fill"></el-image>
+    <el-row type="flex" justify="center">
+      <el-col :span="20">
+        <el-card shadow="hover">
+          <el-row type="flex" justify="center" class="xm-common">
+            <el-col offset="2">
+              <h2>话剧歌剧</h2>
+            </el-col>
+          </el-row>
+          <el-row type="flex" :gutter="50" justify="center" class="xm-common">
+            <!--        <div  >-->
+            <!--         -->
+            <!--&lt;!&ndash;          <el-col :span="1" :xl="1" class="xm-col">&ndash;&gt;-->
+            <!--&lt;!&ndash;            <span>{{item.name}}}</span>&ndash;&gt;-->
+            <!--&lt;!&ndash;            <span>{{item.city}}</span>&ndash;&gt;-->
+            <!--&lt;!&ndash;            <span class="xm-price">{{item.price}}}</span>&ndash;&gt;-->
+            <!--&lt;!&ndash;          </el-col>&ndash;&gt;-->
+            <!--        </div>-->
+            <el-col  v-for="item in showdata2" :span="5" :key="item.url" class="xm-col">
+              <el-row>
+                <el-image :src="item.url" fit="fill"></el-image>
+              </el-row>
+              <el-row>
+                <label class="demonstration">{{item.name}}</label>
+              </el-row>
+            </el-col>
+          </el-row>
+        </el-card>
       </el-col>
     </el-row>
-    <el-divider></el-divider>
     <el-row type="flex" justify="center" class="xm-common">
-      <el-col offset="2">
-        <h2>体育比赛</h2>
+      <el-col :span="20">
+        <el-divider></el-divider>
       </el-col>
     </el-row>
-    <el-row type="flex" :gutter="50" justify="center" class="xm-common">
-      <!--        <div  >-->
-      <!--         -->
-      <!--&lt;!&ndash;          <el-col :span="1" :xl="1" class="xm-col">&ndash;&gt;-->
-      <!--&lt;!&ndash;            <span>{{item.name}}}</span>&ndash;&gt;-->
-      <!--&lt;!&ndash;            <span>{{item.city}}</span>&ndash;&gt;-->
-      <!--&lt;!&ndash;            <span class="xm-price">{{item.price}}}</span>&ndash;&gt;-->
-      <!--&lt;!&ndash;          </el-col>&ndash;&gt;-->
-      <!--        </div>-->
-      <el-col  v-for="item in showdata3" :span="5" :key="item.url" class="xm-col">
-        <label class="demonstration">{{item.name}}</label>
-        <el-image :src="item.url" fit="fill"></el-image>
+    <el-row type="flex" justify="center" class="xm-common">
+      <el-col :span="20">
+        <el-card shadow="hover">
+          <el-row type="flex" justify="center" class="xm-common">
+            <el-col offset="2">
+              <h2>体育比赛</h2>
+            </el-col>
+          </el-row>
+          <el-row type="flex" :gutter="50" justify="center" class="xm-common">
+            <!--        <div  >-->
+            <!--         -->
+            <!--&lt;!&ndash;          <el-col :span="1" :xl="1" class="xm-col">&ndash;&gt;-->
+            <!--&lt;!&ndash;            <span>{{item.name}}}</span>&ndash;&gt;-->
+            <!--&lt;!&ndash;            <span>{{item.city}}</span>&ndash;&gt;-->
+            <!--&lt;!&ndash;            <span class="xm-price">{{item.price}}}</span>&ndash;&gt;-->
+            <!--&lt;!&ndash;          </el-col>&ndash;&gt;-->
+            <!--        </div>-->
+            <el-col  v-for="item in showdata3" :span="5" :key="item.url" class="xm-col">
+              <el-row>
+                <el-image :src="item.url" fit="fill"></el-image>
+              </el-row>
+              <el-row>
+                <label class="demonstration">{{item.name}}</label>
+              </el-row>
+            </el-col>
+          </el-row>
+        </el-card>
       </el-col>
     </el-row>
   </div>
@@ -179,6 +221,12 @@ export default {
   //margin-left: 5px;
   width: fit-content;
   alignment: center;
+}
+
+.xm-row {
+  margin-top: 20px;
+  border-width: thin;
+  border-color: black;
 }
 
 .demonstration{
