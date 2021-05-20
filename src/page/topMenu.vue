@@ -3,7 +3,7 @@
     <el-menu :default-active = "activeIndex" class="el-menu-demo" mode="horizontal" @select="handleSelect">
       <el-menu-item index="1" @click="switchHome">主页</el-menu-item>
       <el-menu-item index="2" @click="switchSearch">分类</el-menu-item>
-      <div v-if="this.$store.state.isLogin">
+      <div v-if="loginStatus">
         <el-submenu index="3" class="xm-submenu">
           <template slot="title" >我</template>
           <el-menu-item index="3-1" @click="switchOrder">订单</el-menu-item>
@@ -43,7 +43,13 @@ export default {
     },
     logout () {
       this.$store.dispatch('logout')
-      this.$router.push('/')
+      window.localStorage.removeItem('token')
+      this.$router.push('/login')
+    }
+  },
+  computed: {
+    loginStatus: function () {
+      return window.localStorage.getItem('token') != null
     }
   }
 }

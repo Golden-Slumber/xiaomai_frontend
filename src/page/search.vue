@@ -8,7 +8,7 @@
           <el-row type="flex" justify="center" :gutter="50">
             <el-col :span="10">
               <span>城市:</span>
-              <el-select v-model="value" filterable @change="switchCity(value)" placeholder="请选择">
+              <el-select v-model="value1" filterable @change="switchCity(value1)" placeholder="请选择">
                 <el-option
                   v-for="item in cityOptions"
                   :key="item.value"
@@ -22,7 +22,7 @@
 <!--            </el-col>-->
             <el-col :span="10">
               <span>分类：</span>
-              <el-select v-model="value" filterable @change="switchCategory(value)" placeholder="请选择">
+              <el-select v-model="value2" filterable @change="switchCategory(value2)" placeholder="请选择">
                 <el-option
                   v-for="item in categoryOptions"
                   :key="item.value"
@@ -53,11 +53,11 @@
             </el-col>
             <el-col :span="16">
               <el-row class="xm-row">
-                <label class="xm-name" @click="switchDetail(item.name)">{{item.name}}</label>
+                <label class="xm-name" @click="switchDetail(item.id)">{{item.name}}</label>
               </el-row>
               <el-row class="xm-row">
                 <i class="el-icon-s-promotion"></i>
-                <label class="xm-city">{{item.city}}</label>
+<!--                <label class="xm-city">{{item.city}}</label>-->
                 <label class="xm-city">{{item.venue}}</label>
               </el-row>
               <el-row class="xm-row">
@@ -67,7 +67,7 @@
           </el-row>
         </el-card>
         <el-row type="flex" justify="center" class="xm-bot">
-          <el-col :span="2">
+          <el-col :span="4">
             <template v-if="currentSize === 5">
               <label class="xm-more" @click="more">查看更多</label>
             </template>
@@ -114,12 +114,6 @@ export default {
       name: '开心麻花爆笑舞台剧《瞎画艺术家》',
       city: '上海市 | FANCL艺术中心 艺海剧院大剧场',
       price: '80'
-    }
-    const like = {
-      url: 'https://img.alicdn.com/bao/uploaded/i4/2251059038/O1CN0124ekxA2GdSK3nQAFH_!!0-item_pic.jpg_q60.jpg_.webp',
-      name: '重塑雕像的权利【喝彩之后】2021上海专场',
-      city: '上海市 | 梅赛德斯-奔驰文化中心',
-      price: '380'
     }
     return {
       cityOptions: [{
@@ -185,8 +179,22 @@ export default {
         label: '其他'
       }],
       tableData: Array(10).fill(item),
-      likeData: Array(4).fill(like),
-      value: '',
+      likeData: [
+        {
+          url: 'https://img.alicdn.com/bao/uploaded/i4/2251059038/O1CN0124ekxA2GdSK3nQAFH_!!0-item_pic.jpg_q60.jpg_.webp',
+          name: '重塑雕像的权利【喝彩之后】2021上海专场',
+          city: '上海市 | 梅赛德斯-奔驰文化中心',
+          price: '380'
+        },
+        {
+          url: 'https://img.alicdn.com/bao/uploaded/https://img.alicdn.com/imgextra/i3/2251059038/O1CN01sx7cQ42GdSJRkEjJd_!!2251059038.png_q60.jpg_.webp',
+          name: '开心麻花爆笑舞台剧《瞎画艺术家》',
+          city: '上海市 | FANCL艺术中心 艺海剧院大剧场',
+          price: '80'
+        }
+      ],
+      value1: '',
+      value2: '',
       type: '0',
       currentPage: 1,
       currentSize: 0,
@@ -203,6 +211,7 @@ export default {
       if (this.type !== '1') {
         this.type = '1'
       }
+      this.value2 = ''
       this.currentPage = 1
       this.currentSize = 0
       this.currentOption = value
@@ -242,6 +251,7 @@ export default {
       if (this.type !== '2') {
         this.type = '2'
       }
+      this.value1 = ''
       this.currentPage = 1
       this.currentSize = 0
       this.currentOption = value
@@ -377,6 +387,9 @@ export default {
     }
   },
   mounted () {
+    if (window.localStorage.getItem('token') == null) {
+      this.$router.push('/login')
+    }
     // 进入该页面时加载初始show信息
     this.$axios({
       method: 'post',

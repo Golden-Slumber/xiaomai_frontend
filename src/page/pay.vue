@@ -53,17 +53,21 @@
                   </template>
                 </el-table-column>
                 <el-table-column
-                  prop="price"
                   label="单价"
                   width="180">
+                  <template slot-scope="scope">
+                    <label>{{scope.row.price+'元'}}</label>
+                  </template>
                 </el-table-column>
                 <el-table-column
                   prop="amount"
                   label="数量">
                 </el-table-column>
                 <el-table-column
-                  prop="total"
                   label="小计">
+                  <template slot-scope="scope">
+                    <label>{{scope.row.total+'元'}}</label>
+                  </template>
                 </el-table-column>
               </el-table>
               <el-form>
@@ -117,6 +121,7 @@ export default {
   },
   methods: {
     placeOrder () {
+      console.log('ticket', this.$store.state.currentTicket)
       this.$axios({
         method: 'post',
         url: 'http://123.60.219.102:10010/damai/order-service/order/place/',
@@ -124,8 +129,7 @@ export default {
           showID: this.$store.state.currentShow,
           sessionID: this.$store.state.currentSession,
           ticketID: this.$store.state.currentTicket,
-          // todo userid
-          userID: '20',
+          // userID: '20',
           amount: this.$store.state.currentAmount
         },
         headers: {

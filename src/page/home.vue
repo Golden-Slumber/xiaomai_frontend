@@ -179,8 +179,11 @@ export default {
     }
   },
   mounted () {
-    console.log('show token')
-    console.log(this.$store.state.token)
+    // console.log('show token')
+    // console.log(this.$store.state.token)
+    if (window.localStorage.getItem('token') == null) {
+      this.$router.push('/login')
+    }
     // 演唱会
     this.$axios({
       method: 'post',

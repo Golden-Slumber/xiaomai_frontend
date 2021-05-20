@@ -17,15 +17,15 @@
                 <el-form-item label="场次">
                   <el-select v-model="session_id" filterable @change="switchSession(session_id)" placeholder="请选择">
                     <el-option
-                      v-for="session in detail.show.sessions"
-                      :key="session.session_id"
-                      :label="session.time"
-                      :value="session.session_id">
+                      v-for="item in detail.sessions"
+                      :key="item.session.id"
+                      :label="getDateFormat(item.session.time)"
+                      :value="item.session.id">
                     </el-option>
                   </el-select>
                 </el-form-item>
                 <el-form-item label="票档">
-                  <el-select v-model="id" filterable @change="switchTicket(id)" placeholder="请选择">
+                  <el-select v-model="ticket" filterable @change="switchTicket(ticket)" placeholder="请选择">
                     <el-option
                       v-for="item in options"
                       :key="item.id"
@@ -34,13 +34,14 @@
                       :disabled="item.remaining_amount === 0">
                     </el-option>
                   </el-select>
+                  <label>元</label>
                 </el-form-item >
                 <el-form-item label="数量">
                   <el-input-number v-model="num" :step="1" @change="handleChange" :min="1" :max="6">
                   </el-input-number>
                 </el-form-item>
                 <el-form-item label="合计">
-                  <span>{{price}}</span>
+                  <span>{{total+' 元'}}</span>
                 </el-form-item>
                 <el-button type="primary" @click="switchPay">立即预定</el-button>
               </el-form>
@@ -164,7 +165,7 @@ import topMenu from './topMenu'
 export default {
   name: 'detail',
   data () {
-    const p = this.price * this.num
+    // const p = this.price * this.num
     return {
       fits: 'fill',
       url: 'https://img.alicdn.com/imgextra/i1/2251059038/O1CN012zd19z2GdSJpRRm9F_!!2251059038.jpg_q60.jpg_.webp',
@@ -191,12 +192,24 @@ export default {
       ticket: '',
       num: 0,
       price: 0,
-      total: p
+      total: 0
     }
   },
   methods: {
+    getDateFormat (value) {
+      const date = new Date(value)
+      return date.toLocaleString('zh-CN')
+      // return date.getFullYear() + '-' + this.checkTime(date.getMonth() + 1) + '-' + this.checkTime(date.getDate())
+    },
+    checkTime (value) {
+      if (value < 10) {
+        value = '0' + value
+      }
+      return value
+    },
     handleChange (value) {
       this.num = value
+      this.total = value * this.price
       console.log(value)
     },
     switchPay () {
@@ -213,7 +226,7 @@ export default {
     switchSession (session_id) {
       let currentSession = this.detail.sessions.find((item, i) => {
         // eslint-disable-next-line camelcase
-        return item.session_id === session_id
+        return item.session.id === session_id
       })
       this.options = currentSession.tickets
     },
@@ -222,6 +235,8 @@ export default {
         return item.id === value
       })
       this.price = ticket.price
+      this.total = this.price * this.num
+      console.log('current price', this.price)
     }
   },
   components: {
@@ -240,6 +255,7 @@ export default {
     }).then(({data}) => {
       if (data.code === 0) {
         this.detail = data.data
+        console.log('sessions', this.detail.sessions)
       } else {
         this.$notify.error({
           title: '糟糕',

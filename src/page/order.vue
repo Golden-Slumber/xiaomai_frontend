@@ -16,31 +16,36 @@
             <template slot-scope="scope">
               <el-row type="flex" justify="center" align="middle" :gutter="10">
                 <el-col :span="12">
-                  <el-image :src="scope.row.url"></el-image>
+                  <el-image :src="scope.row.image"></el-image>
                 </el-col>
                 <el-col :span="12">
                   <el-row><label class="demostration">{{scope.row.name}}</label></el-row>
-                  <el-row><label class="demostration">{{scope.row.city}}</label></el-row>
+<!--                  <el-row><label class="demostration">{{scope.row.city}}</label></el-row>-->
                 </el-col>
               </el-row>
             </template>
           </el-table-column>
           <el-table-column
-            prop="price"
-            label="单价"
-            width="180">
-          </el-table-column>
-          <el-table-column
-            prop="amount"
+            prop="quantity"
             label="数量">
           </el-table-column>
           <el-table-column
-            prop="total"
-            label="小计">
+            label="总价"
+            width="180">
+            <template slot-scope="scope">
+              <label>{{scope.row.amount + '元'}}</label>
+            </template>
           </el-table-column>
           <el-table-column
-            prop="status"
             label="交易状态">
+            <template slot-scope="scope">
+              <template v-if="scope.row.status === 'Successful'">
+                <label class="demostration">交易成功</label>
+              </template>
+              <template v-else>
+                <label class="demostration">交易失败</label>
+              </template>
+            </template>
           </el-table-column>
         </el-table>
       </el-col>
@@ -105,7 +110,6 @@ export default {
       }
     }).then(({data}) => {
       if (data.code === 0) {
-        // todo finish
         this.tableData = data.data
       } else {
         this.$notify.error({
