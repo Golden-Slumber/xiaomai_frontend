@@ -71,7 +71,7 @@
                   <el-checkbox v-model="checked" class="xm-checkbox">我已经阅读并同意《订票服务条款》</el-checkbox>
                 </el-form-item>
                 <el-form-item>
-                  <el-button type="primary" class="xm-button">支付订单</el-button>
+                  <el-button type="primary" class="xm-button" @click="placeOrder">支付订单</el-button>
                 </el-form-item>
               </el-form>
             </el-card>
@@ -101,6 +101,60 @@ export default {
         total: '90'
       }],
       checked: true
+    }
+  },
+  mounted () {
+    this.tableData = [
+      {
+        url: this.$store.state.currentImage,
+        name: this.$store.state.currentShowName,
+        city: this.$store.state.currentShowVenue,
+        price: this.$store.state.currentPrice,
+        amount: this.$store.state.currentAmount,
+        total: this.$store.state.currentPrice * this.$store.state.currentAmount
+      }
+    ]
+  },
+  methods: {
+    placeOrder () {
+      this.$axios({
+        method: 'post',
+        url: 'http://123.60.219.102:10010/damai/order-service/order/place/',
+        data: {
+          showID: this.$store.state.currentShow,
+          sessionID: this.$store.state.currentSession,
+          ticketID: this.$store.state.currentTicket,
+          // todo userid
+          userID: '20',
+          amount: this.$store.state.currentAmount
+        },
+        headers: {
+          'token': 'Bearer Token ' + window.localStorage.getItem('token')
+        }
+      }).then(({data}) => {
+        if (data.code === 0) {
+          this.$notify({
+            title: '成功',
+            message: '支付成功',
+            type: 'success',
+            duration: 3000
+          })
+          this.$router.push('/order')
+        } else {
+          this.$notify.error({
+            title: '失败',
+            message: '支付失败',
+            duration: 3000
+          })
+        }
+      }).catch((error) => {
+        console.log(error)
+        this.$notify.error({
+          title: '失败',
+          message: '支付失败',
+          duration: 3000
+        })
+      })
     }
   }
 }

@@ -91,6 +91,37 @@ export default {
         status: '交易完成'
       }]
     }
+  },
+  mounted () {
+    this.$axios({
+      method: 'post',
+      url: 'http://123.60.219.102:10010/damai/order-service/order/orders',
+      data: {
+        pageNo: 0,
+        pageSize: 100
+      },
+      headers: {
+        'token': 'Bearer Token ' + window.localStorage.getItem('token')
+      }
+    }).then(({data}) => {
+      if (data.code === 0) {
+        // todo finish
+        this.tableData = data.data
+      } else {
+        this.$notify.error({
+          title: '糟糕',
+          message: '出错啦！',
+          duration: 3000
+        })
+      }
+    }).catch((error) => {
+      console.log(error)
+      this.$notify.error({
+        title: '糟糕',
+        message: '出错啦！',
+        duration: 3000
+      })
+    })
   }
 }
 </script>

@@ -6,33 +6,32 @@
         <el-card class="xm-card">
           <el-row type="flex" justify="center" :gutter="50">
             <el-col :span="8">
-              <el-image :src="url"
+              <el-image :src="detail.show.image"
                         :fit="fits">
               </el-image>
             </el-col>
             <el-col :span="12">
-              <h2>【盐城】2021东台西溪草莓音乐节</h2>
-              <h3>场馆：盐城市 | 江苏省东台市西溪景区西溪植物园内</h3>
+              <h2>{{detail.show.name}}</h2>
+              <h3>{{detail.show.venue}}</h3>
               <el-form :model="model" class="xm-form" ref="form">
                 <el-form-item label="场次">
-                  <el-select v-model="time" filterable placeholder="请选择">
+                  <el-select v-model="session_id" filterable @change="switchSession(session_id)" placeholder="请选择">
                     <el-option
-                      v-for="item in options"
-                      :key="item.value"
-                      :label="item.label"
-                      :value="item.value"
-                      :disabled="item.disabled">
+                      v-for="session in detail.show.sessions"
+                      :key="session.session_id"
+                      :label="session.time"
+                      :value="session.session_id">
                     </el-option>
                   </el-select>
                 </el-form-item>
                 <el-form-item label="票档">
-                  <el-select v-model="ticket" filterable placeholder="请选择">
+                  <el-select v-model="id" filterable @change="switchTicket(id)" placeholder="请选择">
                     <el-option
                       v-for="item in options"
-                      :key="item.value"
-                      :label="item.label"
-                      :value="item.value"
-                      :disabled="item.disabled">
+                      :key="item.id"
+                      :label="item.price"
+                      :value="item.id"
+                      :disabled="item.remaining_amount === 0">
                     </el-option>
                   </el-select>
                 </el-form-item >
@@ -113,23 +112,6 @@
               </p>
             </el-col>
           </el-row>
-<!--          <el-row type="flex" justify="center" :gutter="50" class="xm-row">-->
-<!--            <el-col :span="22">-->
-<!--              <h3>观演须知</h3>-->
-<!--            </el-col>-->
-<!--          </el-row>-->
-<!--          <el-row type="flex" justify="center">-->
-<!--            <el-col :span="22">-->
-<!--              <el-divider></el-divider>-->
-<!--            </el-col>-->
-<!--          </el-row>-->
-<!--          <el-row type="flex" justify="center">-->
-<!--            <el-col :span="22">-->
-<!--              <p class="xm-p">-->
-<!--                您知悉，因各地疫情情况，演出地或您所在地疫情防控政策可能影响您的出行安排或演出的入场验证要求。若演出受不可抗力影响延期或取消导致退票的，大麦仅支持退回票款，其它因观演发生的费用需由您自行承担。-->
-<!--              </p>-->
-<!--            </el-col>-->
-<!--          </el-row>-->
         </el-card>
       </el-col>
       <el-col :span="6">
@@ -182,7 +164,7 @@ import topMenu from './topMenu'
 export default {
   name: 'detail',
   data () {
-    const p = 3 * this.num
+    const p = this.price * this.num
     return {
       fits: 'fill',
       url: 'https://img.alicdn.com/imgextra/i1/2251059038/O1CN012zd19z2GdSJpRRm9F_!!2251059038.jpg_q60.jpg_.webp',
@@ -203,22 +185,76 @@ export default {
         value: '选项5',
         label: '北京烤鸭'
       }],
+      detail: {},
+      session_id: '',
       time: '',
       ticket: '',
-      num: '',
-      price: p
+      num: 0,
+      price: 0,
+      total: p
     }
   },
   methods: {
     handleChange (value) {
+      this.num = value
       console.log(value)
     },
     switchPay () {
+      this.$store.dispatch('setCurrentPrice', this.price)
+      this.$store.dispatch('setCurrentAmount', this.num)
+      this.$store.dispatch('setCurrentShowName', this.detail.show.name)
+      this.$store.dispatch('setCurrentShowVenue', this.detail.show.venue)
+      this.$store.dispatch('setCurrentSession', this.session_id)
+      this.$store.dispatch('setCurrentTicket', this.ticket)
+      this.$store.dispatch('setCurrentImage', this.detail.show.image)
       this.$router.push('/pay')
+    },
+    // eslint-disable-next-line camelcase
+    switchSession (session_id) {
+      let currentSession = this.detail.sessions.find((item, i) => {
+        // eslint-disable-next-line camelcase
+        return item.session_id === session_id
+      })
+      this.options = currentSession.tickets
+    },
+    switchTicket (value) {
+      let ticket = this.options.find((item, i) => {
+        return item.id === value
+      })
+      this.price = ticket.price
     }
   },
   components: {
     topMenu
+  },
+  mounted () {
+    this.$axios({
+      method: 'post',
+      url: 'http://123.60.219.102:10010/damai/show-service/show/getDetail/',
+      data: {
+        id: this.$store.state.currentShow
+      },
+      headers: {
+        'token': 'Bearer Token ' + window.localStorage.getItem('token')
+      }
+    }).then(({data}) => {
+      if (data.code === 0) {
+        this.detail = data.data
+      } else {
+        this.$notify.error({
+          title: '糟糕',
+          message: '出错啦！',
+          duration: 3000
+        })
+      }
+    }).catch((error) => {
+      console.log(error)
+      this.$notify.error({
+        title: '糟糕',
+        message: '出错啦！',
+        duration: 3000
+      })
+    })
   }
 }
 </script>

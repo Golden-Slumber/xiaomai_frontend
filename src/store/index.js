@@ -8,7 +8,14 @@ const state = {
   token: '',
   phoneNumber: '',
   username: '',
-  currentShow: ''
+  currentShow: '',
+  currentShowName: '',
+  currentShowVenue: '',
+  currentPrice: 0,
+  currentAmount: 0,
+  currentSession: '',
+  currentTicket: '',
+  currentImage: ''
 }
 
 const mutations = {
@@ -33,6 +40,27 @@ const mutations = {
   },
   setCurrentShow (state, payload) {
     state.currentShow = payload
+  },
+  setCurrentShowName (state, payload) {
+    state.currentShowName = payload
+  },
+  setCurrentShowVenue (state, payload) {
+    state.currentShowVenue = payload
+  },
+  setCurrentPrice (state, payload) {
+    state.currentPrice = payload
+  },
+  setCurrentAmount (state, payload) {
+    state.currentAmount = payload
+  },
+  setCurrentSession (state, payload) {
+    state.currentSession = payload
+  },
+  setCurrentTicket (state, payload) {
+    state.currentTicket = payload
+  },
+  setCurrentImage (state, payload) {
+    state.currentImage = payload
   }
 }
 
@@ -54,6 +82,27 @@ const actions = {
   },
   setCurrentShow ({commit}, payload) {
     commit('setCurrentShow', payload)
+  },
+  setCurrentShowName ({commit}, payload) {
+    commit('setCurrentShowName', payload)
+  },
+  setCurrentShowVenue ({commit}, payload) {
+    commit('setCurrentShowVenue', payload)
+  },
+  setCurrentPrice ({commit}, payload) {
+    commit('setCurrentPrice', payload)
+  },
+  setCurrentAmount ({commit}, payload) {
+    commit('setCurrentAmount', payload)
+  },
+  setCurrentSession ({commit}, payload) {
+    commit('setCurrentSession', payload)
+  },
+  setCurrentTicket ({commit}, payload) {
+    commit('setCurrentTicket', payload)
+  },
+  setCurrentImage ({commit}, payload) {
+    commit('setCurrentImage', payload)
   }
 }
 

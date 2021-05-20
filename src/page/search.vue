@@ -8,9 +8,9 @@
           <el-row type="flex" justify="center" :gutter="50">
             <el-col :span="10">
               <span>城市:</span>
-              <el-select v-model="value" filterable placeholder="请选择">
+              <el-select v-model="value" filterable @change="switchCity(value)" placeholder="请选择">
                 <el-option
-                  v-for="item in options"
+                  v-for="item in cityOptions"
                   :key="item.value"
                   :label="item.label"
                   :value="item.value">
@@ -22,9 +22,9 @@
 <!--            </el-col>-->
             <el-col :span="10">
               <span>分类：</span>
-              <el-select v-model="value" filterable placeholder="请选择">
+              <el-select v-model="value" filterable @change="switchCategory(value)" placeholder="请选择">
                 <el-option
-                  v-for="item in options"
+                  v-for="item in categoryOptions"
                   :key="item.value"
                   :label="item.label"
                   :value="item.value">
@@ -46,28 +46,34 @@
 <!--          <el-table-column prop="address" label="地址">-->
 <!--          </el-table-column>-->
 <!--        </el-table>-->
-        <el-card v-for="item in tableData" :key="item.url" shadow="hover">
+        <el-card v-for="item in tableData" :key="item.id" shadow="hover">
           <el-row type="flex" justify="center" align="middle" :gutter="50" >
             <el-col :span="6">
-              <el-image :src="item.url" fit="fill"></el-image>
+              <el-image :src="item.image" fit="fill"></el-image>
             </el-col>
             <el-col :span="16">
               <el-row class="xm-row">
-                <label class="xm-name" @click="switchDetail">{{item.name}}</label>
+                <label class="xm-name" @click="switchDetail(item.name)">{{item.name}}</label>
               </el-row>
               <el-row class="xm-row">
                 <i class="el-icon-s-promotion"></i>
                 <label class="xm-city">{{item.city}}</label>
+                <label class="xm-city">{{item.venue}}</label>
               </el-row>
               <el-row class="xm-row">
-                <label class="xm-price">{{item.price}}</label>
+                <label class="xm-price">{{item.typeName}}</label>
               </el-row>
             </el-col>
           </el-row>
         </el-card>
         <el-row type="flex" justify="center" class="xm-bot">
           <el-col :span="2">
-            <label class="xm-more">查看更多</label>
+            <template v-if="currentSize === 5">
+              <label class="xm-more" @click="more">查看更多</label>
+            </template>
+            <template v-else>
+              <label class="xm-more">已经没有更多了</label>
+            </template>
           </el-col>
         </el-row>
       </el-col>
@@ -116,31 +122,292 @@ export default {
       price: '380'
     }
     return {
-      options: [{
-        value: '选项1',
-        label: '黄金糕'
+      cityOptions: [{
+        value: '上海',
+        label: '上海'
       }, {
-        value: '选项2',
-        label: '双皮奶'
+        value: '北京',
+        label: '北京'
       }, {
-        value: '选项3',
-        label: '蚵仔煎'
+        value: '杭州',
+        label: '杭州'
       }, {
-        value: '选项4',
-        label: '龙须面'
+        value: '成都',
+        label: '成都'
       }, {
-        value: '选项5',
-        label: '北京烤鸭'
+        value: '武汉',
+        label: '武汉'
+      }, {
+        value: '南京',
+        label: '南京'
+      }, {
+        value: '重庆',
+        label: '重庆'
+      }, {
+        value: '西安',
+        label: '西安'
+      }, {
+        value: '沈阳',
+        label: '沈阳'
+      }, {
+        value: '长沙',
+        label: '长沙'
+      }],
+      categoryOptions: [{
+        value: '演唱会',
+        label: '演唱会'
+      }, {
+        value: '话剧歌剧',
+        label: '话剧歌剧'
+      }, {
+        value: '音乐会',
+        label: '音乐会'
+      }, {
+        value: '曲苑杂坛',
+        label: '曲苑杂坛'
+      }, {
+        value: '体育',
+        label: '体育'
+      }, {
+        value: '展览休闲',
+        label: '展览休闲'
+      }, {
+        value: '舞蹈芭蕾',
+        label: '舞蹈芭蕾'
+      }, {
+        value: '儿童亲子',
+        label: '儿童亲子'
+      }, {
+        value: '旅游演艺',
+        label: '旅游演艺'
+      }, {
+        value: '其他',
+        label: '其他'
       }],
       tableData: Array(10).fill(item),
       likeData: Array(4).fill(like),
-      value: ''
+      value: '',
+      type: '0',
+      currentPage: 1,
+      currentSize: 0,
+      currentOption: ''
     }
   },
   methods: {
-    switchDetail () {
+    switchDetail (id) {
+      this.$store.dispatch('setCurrentShow', id)
+      console.log('show id', id)
       this.$router.push('/detail')
+    },
+    switchCity (value) {
+      if (this.type !== '1') {
+        this.type = '1'
+      }
+      this.currentPage = 1
+      this.currentSize = 0
+      this.currentOption = value
+      this.$axios({
+        method: 'post',
+        url: 'http://123.60.219.102:10010/damai/show-service/show/getAllByCityInPage/',
+        data: {
+          page: this.currentPage,
+          pageSize: 5,
+          city: this.currentOption
+        },
+        headers: {
+          'token': 'Bearer Token ' + window.localStorage.getItem('token')
+        }
+      }).then(({data}) => {
+        if (data.code === 0) {
+          this.tableData = data.data.showList
+          this.currentSize = this.tableData.length
+          this.currentPage += 1
+        } else {
+          this.$notify.error({
+            title: '糟糕',
+            message: '出错啦！',
+            duration: 3000
+          })
+        }
+      }).catch((error) => {
+        console.log(error)
+        this.$notify.error({
+          title: '糟糕',
+          message: '出错啦！',
+          duration: 3000
+        })
+      })
+    },
+    switchCategory (value) {
+      if (this.type !== '2') {
+        this.type = '2'
+      }
+      this.currentPage = 1
+      this.currentSize = 0
+      this.currentOption = value
+      this.$axios({
+        method: 'post',
+        url: 'http://123.60.219.102:10010/damai/show-service/show/getAllByTypeInPage/',
+        data: {
+          page: this.currentPage,
+          pageSize: 5,
+          type: this.currentOption
+        },
+        headers: {
+          'token': 'Bearer Token ' + window.localStorage.getItem('token')
+        }
+      }).then(({data}) => {
+        if (data.code === 0) {
+          this.tableData = data.data.showList
+          this.currentSize = this.tableData.length
+          this.currentPage += 1
+        } else {
+          this.$notify.error({
+            title: '糟糕',
+            message: '出错啦！',
+            duration: 3000
+          })
+        }
+      }).catch((error) => {
+        console.log(error)
+        this.$notify.error({
+          title: '糟糕',
+          message: '出错啦！',
+          duration: 3000
+        })
+      })
+    },
+    more () {
+      if (this.type === '0') {
+        this.$axios({
+          method: 'post',
+          url: 'http://123.60.219.102:10010/damai/show-service/show/getAllInPage/',
+          data: {
+            page: this.currentPage,
+            pageSize: 5
+          },
+          headers: {
+            'token': 'Bearer Token ' + window.localStorage.getItem('token')
+          }
+        }).then(({data}) => {
+          if (data.code === 0) {
+            this.tableData = this.tableData.concat(data.data.showList)
+            this.currentSize = data.data.showList.length
+            this.currentPage += 1
+          } else {
+            this.$notify.error({
+              title: '糟糕',
+              message: '出错啦！',
+              duration: 3000
+            })
+          }
+        }).catch((error) => {
+          console.log(error)
+          this.$notify.error({
+            title: '糟糕',
+            message: '出错啦！',
+            duration: 3000
+          })
+        })
+      } else if (this.type === '1') {
+        this.$axios({
+          method: 'post',
+          url: 'http://123.60.219.102:10010/damai/show-service/show/getAllByCityInPage/',
+          data: {
+            page: this.currentPage,
+            pageSize: 5,
+            city: this.currentOption
+          },
+          headers: {
+            'token': 'Bearer Token ' + window.localStorage.getItem('token')
+          }
+        }).then(({data}) => {
+          if (data.code === 0) {
+            this.tableData = this.tableData.concat(data.data.showList)
+            this.currentSize = data.data.showList.length
+            this.currentPage += 1
+          } else {
+            this.$notify.error({
+              title: '糟糕',
+              message: '出错啦！',
+              duration: 3000
+            })
+          }
+        }).catch((error) => {
+          console.log(error)
+          this.$notify.error({
+            title: '糟糕',
+            message: '出错啦！',
+            duration: 3000
+          })
+        })
+      } else {
+        this.$axios({
+          method: 'post',
+          url: 'http://123.60.219.102:10010/damai/show-service/show/getAllByTypeInPage/',
+          data: {
+            page: this.currentPage,
+            pageSize: 5,
+            type: this.currentOption
+          },
+          headers: {
+            'token': 'Bearer Token ' + window.localStorage.getItem('token')
+          }
+        }).then(({data}) => {
+          if (data.code === 0) {
+            this.tableData = this.tableData.concat(data.data.showList)
+            this.currentSize = data.data.showList.length
+            this.currentPage += 1
+          } else {
+            this.$notify.error({
+              title: '糟糕',
+              message: '出错啦！',
+              duration: 3000
+            })
+          }
+        }).catch((error) => {
+          console.log(error)
+          this.$notify.error({
+            title: '糟糕',
+            message: '出错啦！',
+            duration: 3000
+          })
+        })
+      }
     }
+  },
+  mounted () {
+    // 进入该页面时加载初始show信息
+    this.$axios({
+      method: 'post',
+      url: 'http://123.60.219.102:10010/damai/show-service/show/getAllInPage/',
+      data: {
+        page: this.currentPage,
+        pageSize: 5
+      },
+      headers: {
+        'token': 'Bearer Token ' + window.localStorage.getItem('token')
+      }
+    }).then(({data}) => {
+      if (data.code === 0) {
+        this.tableData = data.data.showList
+        this.currentSize = this.tableData.length
+        this.currentPage += 1
+      } else {
+        this.$notify.error({
+          title: '糟糕',
+          message: '出错啦！',
+          duration: 3000
+        })
+      }
+    }).catch((error) => {
+      console.log(error)
+      this.$notify.error({
+        title: '糟糕',
+        message: '出错啦！',
+        duration: 3000
+      })
+    })
   }
 }
 </script>
